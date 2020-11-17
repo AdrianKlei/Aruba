@@ -21,10 +21,14 @@ cell_predictions = np.loadtxt("/home/adrian/Desktop/cell_row_23_col_25_frongo.tx
 cell_predictions = np.array_split(cell_predictions, 3)
 
 plt.figure()
-plt.plot(weeks[0])
+plt.plot(weeks[2])
 plt.plot(cell_predictions[0])
 plt.show()
 
 # Calculate rmse
-rmse = np.sqrt(np.sum(np.square(weeks[0] - cell_predictions[0])) / len(cell_predictions[0]))
+rmse = np.sqrt(np.sum(np.square(weeks[2] - cell_predictions[0])) / len(cell_predictions[0]))
 print("rmse sums up to : ", rmse)
+
+plt.figure()
+plt.plot(cell_predictions[0])
+plt.show()

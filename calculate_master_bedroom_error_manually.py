@@ -21,10 +21,10 @@ master_bedroom_predictions = np.loadtxt("/home/adrian/Desktop/master_bedroom_fro
 master_bedroom_predictions = np.array_split(master_bedroom_predictions, 16)
 
 plt.figure()
-plt.plot(weeks[0])
+plt.plot(weeks[2])
 plt.plot(master_bedroom_predictions[0])
 plt.show()
 
 # Calculate rmse
-rmse = np.sqrt(np.sum(np.square(weeks[0] - master_bedroom_predictions[0])) / len(master_bedroom_predictions[0]))
+rmse = np.sqrt(np.sum(np.square(weeks[2] - master_bedroom_predictions[0])) / len(master_bedroom_predictions[0]))
 print("rmse sums up to : ", rmse)

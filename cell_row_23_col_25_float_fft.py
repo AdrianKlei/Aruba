@@ -98,6 +98,8 @@ for i in range(100):
     predictions = filtered_sig
 
     rmse = math.sqrt(np.sum((original_data - predictions)**2)/len(original_data))
+    #rmse = np.sqrt(np.sum(np.square(original_data - predictions)) / len(original_data))
+
     errors_array.append(rmse)
     print(rmse)
 
@@ -107,7 +109,7 @@ plt.title("Errors over model numbers")
 plt.show()
 
 # Now we compute the IFFT for ONE specific order to compare the results with them from the fremenserver
-order = 10
+order = 11
 sig_fft = fftpack.fft(requested_room_week) # in contrast to the example, here is used the hann window-function
 power = np.abs(sig_fft)**2
 sample_freq = fftpack.fftfreq(requested_room_week.size, d=times_array[1] - times_array[0])
@@ -154,3 +156,5 @@ plt.ylabel('Amplitude')
 plt.title('Inverse Fourier-Transform of order N')
 
 plt.show()
+
+print("Errors array : ", errors_array[:20])

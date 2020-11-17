@@ -97,7 +97,8 @@ for i in range(100):
     original_data = weeks[0]
     predictions = filtered_sig
 
-    rmse = math.sqrt(np.sum((original_data - np.rint(predictions))**2)/len(original_data))
+    #rmse = math.sqrt(np.sum((original_data - np.rint(predictions))**2)/len(original_data))
+    rmse = np.sqrt(np.sum(np.square(original_data - predictions)) / len(original_data))
     errors_array.append(rmse)
     print(rmse)
 
