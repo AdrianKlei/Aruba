@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from pymongo import MongoClient
 from bson import ObjectId
 from tqdm import tqdm
+import yaml
 
 def insert_data(cell_id, cell_time_stamps, cell_states):
    cell = {
@@ -13,6 +14,11 @@ def insert_data(cell_id, cell_time_stamps, cell_states):
    db.cells.insert_one(cell)
 
 if __name__ == '__main__':
+
+   with open("/home/adrian/Desktop/occupancy_grid_specifications.yaml") as f:
+      dict_docs = yaml.load(f, Loader=yaml.FullLoader)
+      print(dict_docs)
+      exit()
    client = MongoClient('localhost', 27017)
    print('Connection to database has been established.')
    db = client['uol_database']

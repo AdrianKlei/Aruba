@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from bson import ObjectId
 from tqdm import tqdm
 import pymongo
+import yaml
 
 def add_grid():
     matrix = np.loadtxt("/home/adrian/counts_time_series_matrices/test.txt").reshape(2016, 60,
@@ -39,8 +40,8 @@ def find_cell(cell_id):
 if __name__ == '__main__':
    client = pymongo.MongoClient('localhost', 27017)
    print('Connection to database has been established.')
-   db = client['uol_database']
-   collection = db['cells']
+   db = client['uol_database_float']
+   collection = db['cell_recordings']
    #add_grid()
    data = find_cell('cell_row_23_col_25')
    time_stamps = data['time_stamps']

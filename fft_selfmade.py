@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import heapq
 from scipy import fftpack
+import yaml
 
 
 #%pylab inline --no-import-all
@@ -13,8 +14,15 @@ from scipy import fftpack
 # which returns correct values
 
 if __name__ == '__main__':
+    # Reading in occupancy-grid informations from yaml-file
+    with open("/home/adrian/Desktop/occupancy_grid_specifications.yaml") as f:
+        specifications = yaml.load(f, Loader=yaml.FullLoader)
+        bin_size_in_seconds = specifications['bin_size_in_seconds']
+        overall_time_in_seconds = specifications['overall_time_in_seconds']
+
+
     requested_room_week = np.loadtxt("/media/adrian/Volume/occupancy_grid/cell_row_23_col_25/binary_states_array.txt")
-    times_array = np.linspace(60*5, 604800, num=2016, endpoint=True)    # Adjust sample time
+    times_array = np.linspace(bin_size_in_seconds, overall_time_in_seconds, num=int(overall_time_in_seconds / bin_size_in_seconds), endpoint=True)    # Adjust sample time
     #requested_room_week = np.loadtxt("/home/adrian/outside_week.txt")   # default path : "/home/adrian/outside_week.txt"
     #times_array = np.linspace(60, 604800.0, num=10080, endpoint=True)
     # Adro: the following snippet is inserted to test the influences of stretching the data_array
@@ -39,6 +47,7 @@ if __name__ == '__main__':
 
     Y = np.fft.fft(requested_room_week)
     plt.plot(Y)
+    plt.title("FFT with numpy package")
     plt.show()
 
     N = len(Y) /2+1 # research, what exactly this line is doing
@@ -78,7 +87,7 @@ if __name__ == '__main__':
     for i in range(5):
         print(X[i])
 
-    model_order = 9
+    model_order = 6
     threshold_amplitude = test_array[top_N_idx[model_order - 1]]
 
     Y[np.abs(Y) < threshold_amplitude] = 0
@@ -154,7 +163,7 @@ if __name__ == '__main__':
     plt.show()
 
     #identificate the N frequencies with the highest amplitude
-    N = 9
+    N = 6
     max_amplitudes_idx = heapq.nlargest(N, xrange(len(power[pos_mask])), power[pos_mask].__getitem__)
 
     print("The indices of the N highest frequencies are listed below : ")
