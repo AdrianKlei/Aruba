@@ -1,39 +1,58 @@
-import numpy as np
 import pymongo
-# Important : don't save np.arrays to database, convert it into arche-datatyp before or find another solution
+import numpy as np
+import math
+from matplotlib import pyplot as plt
 
-if __name__ == '__main__':
+from tqdm import tqdm
+fileObj = open("/home/adrian/Downloads/strands/aruba/locations.names", "r") #opens the file in read mode
+words = fileObj.read().splitlines() #puts the file into an array
+fileObj.close()
+
+for word in words:
+    print(word)
+
+aruba_dataset = np.loadtxt("/home/adrian/Desktop/locations.min")
+for i in range(len(words)):
+
+    room_occupancy = np.copy(aruba_dataset)
+    room_occupancy[aruba_dataset == i] = 1
+    room_occupancy[aruba_dataset != i] = 0
+
+    # Create bins of 10 mins to count the occupancies in the master bedroom during this interval
+    room_occupancy_acc = np.zeros(len(room_occupancy)/10)
+    # The times_array specifies how many time intervals we have
+    times_array = np.linspace(60, 60*60*24*7*16, num=161280)
+    print(len(room_occupancy_acc))
+    print(len(times_array))
+
+    #for j in range(len(room_occupancy_acc)):
+    #    room_occupancy_acc[j] = sum(room_occupancy[j*10:(j+1)*10])
+
+    #room_occupancy_acc[room_occupancy_acc > 1] = 1
+
+
+    #plt.figure()
+    # The numbers of times_array must fit the time interval numbers
+    #plt.plot(times_array[:10080], room_occupancy[:10080])
+    #plt.title("Binary room occupancy for one week")
+    #plt.show()
+
+    # Save the values to the database "aruba_database_binary_60"
     client = pymongo.MongoClient('localhost', 27017)
     print("Connection to database has been established.")
-    db = client['test_cell_database']
+    db = client['aruba_database_binary_60']
     collection = db['cell_recordings']
+    room_occupancy_converted = room_occupancy.tolist()
+    times_array_converted = times_array.tolist()
 
-    cell_recording = {
-        'name' : 'cell_row_23_col_25',
-        'timestamp' : 5,
-        'state' : 5
+    # Rooms get saved with gird_cell_names
+    for k in tqdm(range(len(room_occupancy)), desc="Cell progress"):
+        cell = {
+            'name': "cell_row_0_col_" + str(i),
+            'timestamp': times_array_converted[k],
+            'state': room_occupancy_converted[k]
+            }
+        collection.insert_one(cell)
 
-    }
-    # We need 400 timestamps of the test cell over a period of 4 weeks
-    # 100 timestamps per week and 1 week has 604800 seconds
-    # One timestamp every 6048 seconds
-
-    timestamps = np.linspace(6048, 2419200, num=400, endpoint=True)
-    states = np.zeros(400,)
-
-    states[:100] = 1
-    states[300:] = 1
-    timestamps_converted = timestamps.tolist()
-    states_converted = states.tolist()
-
-    # Add each timestamp to the database
-    for i in range(len(timestamps_converted)):
-        cell_recording = {
-            'name': 'cell_row_23_col_25',
-            'timestamp': timestamps_converted[i],
-            'state': states_converted[i]
-
-        }
-        collection.insert_one(cell_recording)
-    print("All records of the test cell have been added to the database.")
+    print("Finished...")
 

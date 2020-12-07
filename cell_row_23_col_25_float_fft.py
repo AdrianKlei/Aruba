@@ -109,7 +109,7 @@ plt.title("Errors over model numbers")
 plt.show()
 
 # Now we compute the IFFT for ONE specific order to compare the results with them from the fremenserver
-order = 11
+order = 51
 sig_fft = fftpack.fft(requested_room_week) # in contrast to the example, here is used the hann window-function
 power = np.abs(sig_fft)**2
 sample_freq = fftpack.fftfreq(requested_room_week.size, d=times_array[1] - times_array[0])
